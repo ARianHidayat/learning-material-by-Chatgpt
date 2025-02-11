@@ -69,6 +69,138 @@ Bayangkan kamu sedang **berjalan di trotoar**, dan ada **5 lampu jalan** yang me
 
 Begitulah cara tombol pagination bekerja! **Tombol yang ditampilkan selalu berpusat di sekitar halaman saat ini**.
 
+## 🔍 **Penjelasan Baris per Baris**
+
+## 📝 **Kode Pagination **
+
+```javascript
+const visiblePages = 5;
+let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+if (endPage - startPage + 1 < visiblePages) {
+  startPage = Math.max(1, endPage - visiblePages + 1);
+}
+```
+
+### 1️⃣ **Menentukan Jumlah Halaman yang Ditampilkan**
+
+```javascript
+const visiblePages = 5;
+```
+
+- Variabel ini menyatakan bahwa **maksimal 5 halaman** akan ditampilkan dalam pagination.
+
+---
+
+### 2️⃣ **Menentukan Halaman Awal (\*\***`startPage`\***\*)**
+
+```javascript
+let startPage = Math.max(1, currentPage - Math.floor(visiblePages / 2));
+```
+
+- Ini menentukan dari halaman berapa pagination akan dimulai.
+- `Math.floor(visiblePages / 2)` digunakan untuk membagi halaman secara merata di kiri dan kanan halaman saat ini.
+- **`Math.max(1, ...)`** memastikan bahwa `startPage` tidak kurang dari 1.
+
+**Mengapa \*\***`visiblePages`\***\* dibagi 2?**
+
+- Tujuannya adalah agar halaman yang ditampilkan tetap seimbang di kedua sisi `currentPage`.
+- Misalnya, jika `visiblePages = 5`, maka kita ingin menampilkan **2 halaman sebelum** dan **2 halaman setelah** `currentPage`.
+- **Jika tidak dibagi 2**, pagination bisa terlalu condong ke salah satu sisi, membuat tampilan tidak merata.
+
+**Contoh:**
+Jika `currentPage = 4` dan `visiblePages = 5`, maka:
+
+```javascript
+Math.floor(5 / 2) = 2
+startPage = Math.max(1, 4 - 2) = 2
+```
+
+Artinya, pagination akan dimulai dari halaman **2**.
+
+Jika `visiblePages` tidak dibagi 2 dan langsung dikurangkan, misalnya `currentPage - visiblePages`, maka rentang halaman bisa terlalu miring ke kiri.
+
+**Analogi:**
+Bayangkan kamu sedang berjalan di trotoar dengan **5 lampu jalan** yang menerangi sekitarmu.
+
+- Jika kamu berada di tengah jalan, maka **2 lampu di depan dan 2 di belakang** tetap menyala.
+- Jika pembagian ini tidak merata, bisa jadi hanya satu sisi yang terang, sementara sisi lain gelap.
+
+---
+
+### 3️⃣ **Menentukan Halaman Akhir (\*\***`endPage`\***\*)**
+
+```javascript
+let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+```
+
+- Ini menentukan sampai halaman berapa pagination akan ditampilkan.
+- **`Math.min(totalPages, ...)`** memastikan bahwa `endPage` tidak melebihi total halaman yang ada.
+- **Rumus:**
+  ```
+  endPage = startPage + (visiblePages - 1)
+  ```
+  Rumus ini menjaga agar jumlah halaman yang ditampilkan tetap sesuai dengan `visiblePages`.
+
+**Contoh:**
+Jika `startPage = 2` dan `visiblePages = 5`, maka:
+
+```javascript
+endPage = Math.min(totalPages, 2 + 5 - 1) = Math.min(totalPages, 6)
+```
+
+Pagination akan menampilkan halaman dari **2 hingga 6** (jika `totalPages ≥ 6`).
+
+**Analogi:**
+Bayangkan kamu sedang membaca buku dan ingin melihat **5 halaman sekaligus**.
+
+- Jika kamu mulai dari halaman 2, maka kamu bisa membaca hingga halaman 6.
+- Namun, jika buku hanya memiliki 4 halaman, maka kamu hanya bisa membaca hingga halaman 4.
+- `Math.min` memastikan kita tidak membaca halaman yang tidak ada.
+
+---
+
+### 4️⃣ **Mengoreksi Jika Rentang Halaman Kurang dari \*\***`visiblePages`**\*\***
+
+```javascript
+if (endPage - startPage + 1 < visiblePages) {
+  startPage = Math.max(1, endPage - visiblePages + 1);
+}
+```
+
+- Jika jumlah halaman yang ditampilkan kurang dari `visiblePages`, kita geser `startPage` ke kiri agar tetap mencakup jumlah halaman yang diinginkan.
+- **`Math.max(1, ...)`** memastikan `startPage` tidak kurang dari 1.
+
+**Contoh Kasus:**
+Jika `totalPages = 3` dan `visiblePages = 5`, tanpa koreksi:
+
+```javascript
+startPage = Math.max(1, currentPage - 2);
+endPage = Math.min(3, startPage + 4);
+```
+
+Hasilnya mungkin `startPage = 1, endPage = 3`, yang hanya mencakup **3 halaman**.
+
+- Agar tetap **5 halaman**, kita sesuaikan `startPage` dengan aturan di atas.
+
+**Analogi:**
+Bayangkan kamu memiliki **5 kursi untuk tamu** tetapi hanya ada **3 tamu** yang hadir.
+
+- Agar kursi tetap penuh, kamu bisa mengatur ulang posisi mereka agar tetap terlihat rapi.
+- Jika kursi yang tersedia lebih sedikit dari yang diinginkan, kita hanya menampilkan sebanyak yang ada.
+
+---
+
+## 🎭 **Kesimpulan**
+
+- Kode ini memastikan bahwa pagination selalu menampilkan **5 halaman**, kecuali total halaman lebih kecil.
+- **`startPage`** disesuaikan agar pagination tidak keluar dari batas.
+- **`endPage`** ditentukan agar tidak melebihi `totalPages`.
+- Koreksi tambahan dilakukan jika jumlah halaman yang ditampilkan kurang dari `visiblePages`.
+
+🎯 **Sekarang kamu bisa menggunakannya untuk pagination yang fleksibel!** 🚀
+
 ---
 
 ### **3️⃣ Buat Array Tombol Halaman**
